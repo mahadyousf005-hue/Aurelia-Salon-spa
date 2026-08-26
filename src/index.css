@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --cream: #F8F3EC;
+    --cream-dark: #EFE5D8;
+    --chocolate: #3A241C;
+    --espresso: #241611;
+    --brown: #6B4A3A;
+    --gold: #C9A66B;
+    --gold-light: #E4D1AD;
+    --beige: #E9DCCB;
+    --white: #FFFDFC;
+    --text: #2E211C;
+    --text-light: #796A61;
+    --border: #E6D9CC;
+    --success: #58745A;
+    --danger: #A45145;
+  }
+
+  body {
+    font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #F8F3EC;
+    color: #2E211C;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif-luxury, .font-serif {
+    font-family: 'Libre Baskerville', 'Playfair Display', Georgia, serif;
+  }
+
+  .font-eyebrow, .font-montserrat {
+    font-family: 'Montserrat', 'Helvetica', sans-serif;
+  }
+}
+
+/* Custom smooth scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8F3EC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #E4D1AD;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C9A66B;
+}
+
+/* Luxury card glass & shadow styles */
+.luxury-shadow-sm {
+  box-shadow: 0px 4px 14px rgba(58, 36, 28, 0.06);
+}
+
+.luxury-shadow {
+  box-shadow: 0px 8px 24px rgba(58, 36, 28, 0.09);
+}
+
+.luxury-shadow-lg {
+  box-shadow: 0px 16px 50px rgba(58, 36, 28, 0.14);
+}
+
+.luxury-shadow-gold {
+  box-shadow: 0px 8px 24px rgba(201, 166, 107, 0.25);
+}
