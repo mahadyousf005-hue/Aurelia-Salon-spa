@@ -1,6 +1,0 @@
-{
-  "name": "Aurelia Salon & Spa",
-  "description": "Luxury salon and spa management platform featuring appointment booking, staff scheduling, service catalog, payment tracking, and multi-role dashboards.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}

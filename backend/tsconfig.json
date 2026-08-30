@@ -3,7 +3,7 @@
     "target": "ES2022",
     "module": "ESNext",
     "moduleResolution": "bundler",
-    "rootDir": "..",
+    "rootDir": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -12,9 +12,10 @@
     "noEmit": true
   },
   "include": [
-    "src/**/*",
-    "../src/server/**/*.ts",
-    "../src/data/salonData.ts",
-    "../src/types/index.ts"
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "src/data/api.ts",
+    "src/data/supabase.ts"
   ]
 }
