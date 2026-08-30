@@ -654,4 +654,23 @@ app.get('/api/dashboard', async (_req: Request, res: Response) => {
   }
 });
 
+// ==========================================
+// 10. API Root Endpoint
+// ==========================================
+app.get('/api', (_req: Request, res: Response) => {
+  res.json({
+    message: '🌸 Aurelia Salon & Spa Backend API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth/login, /api/auth/register',
+      users: '/api/users',
+      appointments: '/api/appointments',
+      staff: '/api/staff',
+      payments: '/api/payments',
+      dashboard: '/api/dashboard'
+    }
+  });
+});
+
 export default app;
