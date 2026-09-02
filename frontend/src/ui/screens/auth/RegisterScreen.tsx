@@ -5,6 +5,7 @@ import { AureliaLogo } from '../../components/AureliaLogo';
 import { AuthTextField } from '../../components/AuthTextField';
 import { PasswordField } from '../../components/PasswordField';
 import { PrimaryGoldButton } from '../../components/PrimaryGoldButton';
+import { AuthActionModal } from '../../components/AuthActionModal';
 import { SALON_SPA_IMAGE } from '../../../data/salonData';
 
 export const RegisterScreen: React.FC = () => {
@@ -18,20 +19,29 @@ export const RegisterScreen: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
 
   const handleRegister = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     console.info('[SIGNUP] CREATE ACCOUNT BUTTON CLICKED', { role, hasName: Boolean(name.trim()), hasEmail: Boolean(email.trim()), hasPhone: Boolean(phone.trim()), passwordLength: password.length });
+    setIsRegisterModalOpen(true);
+  };
+
+  const confirmRegister = async () => {
     if (!name.trim() || !email.trim() || !password) {
       setErrorMsg('Full Name, Email and Password are required.');
+      setIsRegisterModalOpen(false);
       return;
     }
     if (password !== confirmPassword) {
       setErrorMsg('Passwords do not match.');
+      setIsRegisterModalOpen(false);
       return;
     }
     if (password.length < 6) {
       setErrorMsg('Password should be at least 6 characters long.');
+      setIsRegisterModalOpen(false);
       return;
     }
 
@@ -39,10 +49,13 @@ export const RegisterScreen: React.FC = () => {
       setLoading(true);
       setErrorMsg(null);
       await register(name, email, phone, password, role);
+      setIsRegisterModalOpen(false);
+      setIsSuccessModalOpen(true);
     } catch (err: any) {
       setErrorMsg(err.message || 'Registration failed. Please try again.');
     } finally {
       setLoading(false);
+      setIsRegisterModalOpen(false);
     }
   };
 
@@ -194,6 +207,17 @@ export const RegisterScreen: React.FC = () => {
         </div>
 
       </div>
+
+      <AuthActionModal action="register" isOpen={isRegisterModalOpen} loading={loading} onClose={() => setIsRegisterModalOpen(false)} onConfirm={confirmRegister} />
+      <AuthActionModal
+        action="success"
+        isOpen={isSuccessModalOpen}
+        onClose={() => setIsSuccessModalOpen(false)}
+        onConfirm={() => {
+          setIsSuccessModalOpen(false);
+          navigate('Login', { role, signupMessage: 'Account created successfully. You can now log in.' });
+        }}
+      />
     </div>
   );
 };

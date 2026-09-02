@@ -118,38 +118,11 @@ app.post('/api/auth/register', async (req: Request, res: Response) => {
       });
       if (error) return res.status(400).json({ error: error.message });
 
-      const profile = {
-        id: data.user.id,
-        full_name: String(name).trim(),
-        email: String(email).trim().toLowerCase(),
-        phone: phone?.trim() || '',
-        role
-      };
-      const { error: userError } = await supabase.from('users').upsert({
-        id: data.user.id,
-        name: profile.full_name,
-        email: profile.email,
-        phone: profile.phone,
-        role,
-        password_hash: 'managed-by-supabase-auth'
-      }, { onConflict: 'id' });
-      if (userError) return res.status(500).json({ error: userError.message });
-      const { error: profileError } = await supabase.from('profiles').upsert(profile, { onConflict: 'id' });
-      if (profileError) return res.status(500).json({ error: profileError.message });
-
-      const account = {
-        id: data.user.id,
-        user_id: data.user.id,
-        name: profile.full_name,
-        email: profile.email,
-        phone: profile.phone
-      };
-      const { error: accountError } = role === 'customer'
-        ? await supabase.from('customers').upsert({ ...account, total_visits: 0, role: 'customer' }, { onConflict: 'id' })
-        : await supabase.from('staff').upsert({ ...account, specialization: 'Staff Member', experience: 'New', rating: 5, status: 'Active', services: [] }, { onConflict: 'id' });
-      if (accountError) return res.status(500).json({ error: accountError.message });
-
-      return res.status(201).json({ message: 'Account created successfully', user: { id: data.user.id, name, email, phone, role } });
+      // The auth trigger creates the related users, profile, and account rows.
+      return res.status(201).json({
+        message: 'Account created successfully',
+        user: { id: data.user.id, name: String(name).trim(), email: String(email).trim().toLowerCase(), phone: phone?.trim() || '', role }
+      });
     }
 
     const cleanEmail = email.trim().toLowerCase();

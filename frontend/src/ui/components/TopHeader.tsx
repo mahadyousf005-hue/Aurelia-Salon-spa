@@ -27,7 +27,7 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ showBack = false, onBack, 
 
   return (
     <header className="sticky top-0 z-30 bg-[#F8F3EC]/95 backdrop-blur-md border-b border-[#E6D9CC]/70 px-4 py-3">
-      <div className="max-w-4xl mx-auto flex items-center justify-between">
+      <div className="w-full max-w-7xl mx-auto flex items-center justify-between px-2 sm:px-4 lg:px-8">
         <div className="flex items-center gap-3">
           {showBack && currentScreen !== 'Home' && (
             <button

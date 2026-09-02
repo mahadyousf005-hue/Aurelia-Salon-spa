@@ -5,6 +5,7 @@ import { AureliaLogo } from '../../components/AureliaLogo';
 import { AuthTextField } from '../../components/AuthTextField';
 import { PasswordField } from '../../components/PasswordField';
 import { PrimaryGoldButton } from '../../components/PrimaryGoldButton';
+import { AuthActionModal } from '../../components/AuthActionModal';
 import { SALON_HERO_IMAGE } from '../../../data/salonData';
 
 export const LoginScreen: React.FC = () => {
@@ -16,11 +17,17 @@ export const LoginScreen: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [forgotMsg, setForgotMsg] = useState<string | null>(null);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   const handleLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
+    setIsLoginModalOpen(true);
+  };
+
+  const confirmLogin = async () => {
     if (!email.trim() || !password) {
       setErrorMsg('Email and password are required.');
+      setIsLoginModalOpen(false);
       return;
     }
 
@@ -32,6 +39,7 @@ export const LoginScreen: React.FC = () => {
       setErrorMsg(err.message || 'Login failed. Please check your credentials.');
     } finally {
       setLoading(false);
+      setIsLoginModalOpen(false);
     }
   };
 
@@ -219,6 +227,8 @@ export const LoginScreen: React.FC = () => {
         </div>
 
       </div>
+
+      <AuthActionModal action="login" isOpen={isLoginModalOpen} loading={loading} onClose={() => setIsLoginModalOpen(false)} onConfirm={confirmLogin} />
     </div>
   );
 };

@@ -38,7 +38,7 @@ interface AuthContextType {
   navigate: (screen: ScreenName, params?: NavigationParams) => void;
   resetNavigation: (screen: ScreenName, params?: NavigationParams) => void;
   login: (email: string, password?: string, roleRequirement?: UserRole | null) => Promise<User>;
-  register: (name: string, email: string, phone: string, password: string, role?: UserRole) => Promise<void>;
+  register: (name: string, email: string, phone: string, password: string, role?: UserRole) => Promise<string>;
   logout: () => Promise<void>;
   updateProfile: (name: string, phone: string) => Promise<void>;
   isLoading: boolean;
@@ -95,10 +95,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (email: string, password: string = '', roleRequirement?: UserRole | null): Promise<User> => {
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim().toLowerCase(), password });
-      if (error) throw new Error(error.message);
-      if (!data.session) throw new Error('Login succeeded but no session was returned.');
-      const authenticatedUser = await loadProfile(data.user.id, data.session.access_token);
+      const response = await apiRequest<{ token: string; user: User }>('/auth/login', 'POST', {
+        email: email.trim().toLowerCase(),
+        password
+      });
+      const authenticatedUser = response.user;
 
       if (roleRequirement && authenticatedUser.role !== roleRequirement) {
         throw new Error(
@@ -112,7 +113,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         );
       }
 
-      setStoredAuth(data.session.access_token, authenticatedUser);
+      setStoredAuth(response.token, authenticatedUser);
       setUser(authenticatedUser);
       resetNavigation('Home');
       return authenticatedUser;
@@ -121,15 +122,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const register = async (name: string, email: string, phone: string, password: string, role: UserRole = 'customer'): Promise<void> => {
-    setIsLoading(true);
-    try {
-      if (role !== 'customer' && role !== 'staff') throw new Error('Only customer and staff registration is allowed.');
-      await apiRequest('/auth/register', 'POST', { name, email, phone, password, role });
-      navigate('Login', { role, signupMessage: 'Account created successfully. You can now log in.' });
-    } finally {
-      setIsLoading(false);
-    }
+  const register = async (name: string, email: string, phone: string, password: string, role: UserRole = 'customer'): Promise<string> => {
+    if (role !== 'customer' && role !== 'staff') throw new Error('Only customer and staff registration is allowed.');
+    const response = await apiRequest<{ message?: string }>('/auth/register', 'POST', { name, email, phone, password, role });
+    return response.message || 'Account created successfully. You can now log in.';
   };
 
   const logout = async () => {
